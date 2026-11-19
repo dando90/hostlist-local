@@ -272,7 +272,7 @@ function recordsFrom(payload: any) {
     for (const key of detailFields) if (item[key] !== undefined) record[key] = item[key];
     return record;
   }).filter((item: Record<string, unknown>) => Boolean(item.id));
-  const totalRows = Number.isFinite(Number(payload.totalRows)) ? Number(payload.totalRows) : records.length;
+  const totalRows = Number.isFinite(Number(payload.totalRows)) ? Number(payload.totalRows) : null;
   return { records, totalRows };
 }
 
@@ -407,7 +407,7 @@ export function getHostAnalysisDetails(hostId: string) {
     lastSeen: host.last_seen,
     modelPayload: buildHostAnalysisPayload(source),
     professional,
-    website: null,
+    website: null as string | null,
   };
 }
 export function getCaptures() { return db.prepare("SELECT id,captured_at,page_start,page_count,record_count,total_rows,source_url FROM captures ORDER BY id DESC LIMIT 3").all(); }
