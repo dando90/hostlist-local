@@ -1,0 +1,14 @@
+{
+  "version": "openai-standard-prices-2026-11-11-v1",
+  "currency": "USD",
+  "vatRate": 0.22,
+  "models": {
+    "gpt-6-luna": {
+      "serviceTier": "standard",
+      "inputUsdPerMillion": 0.1,
+      "cachedInputUsdPerMillion": 0.01,
+      "cacheWriteUsdPerMillion": 0.125,
+      "outputUsdPerMillion": 0.5
+    }
+  }
+}

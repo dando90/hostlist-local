@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "HostList Local Bridge",
+  "version": "0.1.0",
+  "description": "Collega la dashboard locale all'applicazione HostList.",
+  "permissions": ["https://demo.hostlist.example/*", "http://127.0.0.1/*", "tabs"],
+  "content_scripts": [
+    {
+      "matches": ["https://demo.hostlist.example/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["http://127.0.0.1/*"],
+      "js": ["dashboard-bridge.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": ["page-hook.js"],
+  "background": { "scripts": ["background.js"] },
+  "browser_specific_settings": {
+    "gecko": { "id": "hostlist-local-bridge@local" }
+  }
+}

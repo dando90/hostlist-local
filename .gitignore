@@ -1,0 +1,21 @@
+# Local database and runtime state (may contain personal data)
+data/
+
+# Node.js dependencies
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+config.local.json
+
+# Editor and operating system files
+.DS_Store
+Thumbs.db
+.vscode/
+
+#Codex files
+output/
+tmp/

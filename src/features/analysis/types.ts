@@ -1,0 +1,46 @@
+export type Location = { country: string | null; city: string | null };
+export type AiUsageSummary = {
+  calls: number;
+  hosts: number;
+  input_tokens: number;
+  output_tokens: number;
+  cached_input_tokens: number;
+  cache_write_tokens: number;
+  reasoning_tokens: number;
+  cost_net_usd: number;
+  vat_usd: number;
+  cost_gross_usd: number;
+  calls_without_cost: number;
+};
+export type Analysis = {
+  host_id: string;
+  fullname: string | null;
+  company: string | null;
+  primary_domain: string | null;
+  secondary_domain: string | null;
+  country: string | null;
+  city: string | null;
+  is_favorite: number;
+  overall_score: number;
+  software_project_score: number;
+  ai_llm_score: number;
+  mentoring_score: number;
+  technology_score: number;
+  contribution_score: number;
+  networking_score: number;
+  strengths: string[];
+  weaknesses: string[];
+  learning_potential: string;
+  rationale: string;
+  confidence: string;
+  model_id?: string;
+};
+export type HostAnalysisDetails = {
+  hostId: string;
+  capturedAt: string | null;
+  firstSeen: string;
+  lastSeen: string;
+  modelPayload: Record<string, unknown>;
+  professional: Record<string, unknown>;
+  website: string | null;
+};

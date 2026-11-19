@@ -1,0 +1,26 @@
+{
+  "name": "hostlist-local",
+  "version": "0.2.0",
+  "private": true,
+  "engines": { "node": ">=22.18.0" },
+  "scripts": {
+    "dev": "node ./node_modules/next/dist/bin/next dev --webpack --hostname 127.0.0.1 --port 18765",
+    "build": "node ./node_modules/next/dist/bin/next build --webpack",
+    "start": "node ./node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 18765",
+    "test": "node --experimental-strip-types --test"
+  },
+  "dependencies": {
+    "@langchain/openai": "^1.8.3",
+    "langchain": "^1.5.19",
+    "next": "^16.4.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.9.3"
+  }
+}
