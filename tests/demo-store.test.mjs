@@ -6,7 +6,7 @@ import path from "node:path";
 
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "hostlist-store-test-"));
 process.env.HOSTLIST_DATABASE_PATH = path.join(tempRoot, "demo.sqlite3");
-const store = await import("../src/server/store.ts");
+const store = await import("../src/server/store-demo.ts");
 
 after(() => {
   store.db.close();

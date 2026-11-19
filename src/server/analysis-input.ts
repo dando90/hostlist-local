@@ -31,7 +31,11 @@ function clean(value: unknown): string | null {
   const text = String(value).replace(/<br\s*\/?\s*>/gi, "\n").replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">")
     .replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").trim();
-  return !text || text === "-" ? null : text;
+  if (!text || text === "-") return null;
+  const privacyFiltered = text
+    .replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, "[email omitted]")
+    .replace(/\+?\d[\d\s().-]{7,}\d/g, "[phone omitted]");
+  return privacyFiltered.trim() || null;
 }
 
 function numberOrText(value: unknown) {

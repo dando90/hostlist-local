@@ -37,7 +37,7 @@
   window.addEventListener("message", (event) => {
     if (event.source !== window || event.origin !== location.origin || !event.data || event.data.type !== "HOSTLIST_OPEN_PROFILE") return;
     const { hostId, requestId } = event.data;
-    if (!/^\d+$/.test(String(hostId || "")) || typeof requestId !== "string") {
+    if (!/^[a-zA-Z0-9_-]+$/.test(String(hostId || "")) || typeof requestId !== "string") {
       window.postMessage({ type: "HOSTLIST_OPEN_PROFILE_RESULT", requestId, ok: false, message: "Richiesta di apertura non valida." }, location.origin);
       return;
     }
@@ -54,12 +54,12 @@
     event.preventDefault();
 
     const hostId = button.dataset.openHostId;
-    if (!/^\d+$/.test(hostId || "")) {
+    if (!/^[a-zA-Z0-9_-]+$/.test(hostId || "")) {
       status("ID host non valido.", true);
       return;
     }
 
-    status("Apertura del profilo nella demo…");
+    status("Apertura della scheda profilo…");
     try {
       const result = await openProfile(hostId);
       status(result?.message || "Richiesta completata.", !result?.ok);

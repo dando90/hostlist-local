@@ -2,6 +2,7 @@ import {
   analyzeHostDeterministically, getAiAnalysisFilters, getAnalysisFilters, getCaptures, getDomains,
   getAiAnalysisUsageSummary, getHostAiAnalyses, getHostAnalyses, getHostAnalysisDetails, getHosts, getStatus, readHost, saveCapture, saveHostDetail, setHostFavorite,
 } from "./store.ts";
+import { runtimeMode } from "./runtime-config.ts";
 import { analyzeHostWithAi } from "./ai/analyze-host.ts";
 
 const jsonHeaders = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
@@ -53,6 +54,16 @@ export async function handleApi(request: Request) {
   const pathname = url.pathname;
   const origin = request.headers.get("origin");
 
+  if (request.method === "GET" && pathname === "/api/runtime-mode") {
+    if (origin && !origin.startsWith("moz-extension://") && !isAllowedLocalDashboardOrigin(origin, request.headers.get("host"))) {
+      return jsonResponse({ error: "Origine rifiutata." }, 403);
+    }
+    const extensionCors: Record<string, string> = origin?.startsWith("moz-extension://")
+      ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" }
+      : {};
+    return jsonResponse({ mode: runtimeMode }, 200, extensionCors);
+  }
+
   if (request.method === "OPTIONS" && ["/api/capture", "/api/host-detail"].includes(pathname)) {
     if (!origin?.startsWith("moz-extension://")) return new Response(null, { status: 403 });
     return new Response(null, { status: 204, headers: {
@@ -86,7 +97,7 @@ export async function handleApi(request: Request) {
     try {
       const body = await readJsonLimited(request, 1024);
       const hostId = String(body?.hostId ?? "");
-      if (!/^\d+$/.test(hostId)) return jsonResponse({ error: "ID host non valido" }, 400);
+      if (!/^[A-Za-z0-9_-]+$/.test(hostId)) return jsonResponse({ error: "ID host non valido" }, 400);
       const result = analyzeHostDeterministically(hostId, body?.onlyIfMissing === true);
       return result ? jsonResponse({ ok: true, ...result }) : jsonResponse({ error: "Host non trovato" }, 404);
     } catch (error) {
@@ -102,7 +113,7 @@ export async function handleApi(request: Request) {
     try {
       const body = await readJsonLimited(request, 1024);
       const hostId = String(body?.hostId ?? "");
-      if (!/^\d+$/.test(hostId) || typeof body?.favorite !== "boolean") return jsonResponse({ error: "ID host o preferito non valido." }, 400);
+      if (!/^[A-Za-z0-9_-]+$/.test(hostId) || typeof body?.favorite !== "boolean") return jsonResponse({ error: "ID host o preferito non valido." }, 400);
       const result = setHostFavorite(hostId, body.favorite);
       return result ? jsonResponse({ ok: true, ...result }) : jsonResponse({ error: "Host non trovato." }, 404);
     } catch (error) {
@@ -119,7 +130,7 @@ export async function handleApi(request: Request) {
     try {
       const body = await readJsonLimited(request, 1024);
       const hostId = String(body?.hostId ?? "");
-      if (!/^\d+$/.test(hostId)) return jsonResponse({ error: "ID host non valido." }, 400);
+      if (!/^[A-Za-z0-9_-]+$/.test(hostId)) return jsonResponse({ error: "ID host non valido." }, 400);
       const result = await analyzeHostWithAi(hostId, body?.onlyIfMissing === true);
       if (result.skipped === "in_progress") return jsonResponse({ ok: body?.onlyIfMissing === true, skipped: result.skipped, error: "Analisi IA già in corso per questo host.", code: "HOST_AI_IN_PROGRESS", retryable: false }, body?.onlyIfMissing === true ? 200 : 409);
       return jsonResponse({ ok: true, ...result });
