@@ -2,14 +2,43 @@
 
 HostList Local is a local-first host directory with deterministic and AI-assisted profile analysis. It stores data in SQLite on this computer. The public edition is designed for a demonstration data source.
 
-## Start the local app
+## Try the demo
 
-1. Install Node.js 22.18 or newer.
-2. Run `npm install` and then `npm run dev` from this directory.
-3. Open `http://127.0.0.1:18765`.
-4. To enable AI analysis, copy `.env.example` to `.env`, add an API key, and restart the app. The key is used only by the local server.
+You need Node.js 22.18 or newer and Firefox. Clone this repository, open a terminal in its folder, and install the dependencies:
 
-The public demo pages and synthetic host data are provided by the separate HostList Server project. Open the directory there, then use its pagination and host detail pages; the Firefox extension captures their JSON responses into this app's local SQLite database.
+```sh
+git clone https://github.com/dando90/hostlist-local.git
+cd hostlist-local
+npm install
+```
+
+Start the local app and leave this terminal running:
+
+```sh
+npm run dev
+```
+
+Open the dashboard at <http://127.0.0.1:18765>. The app stores captured data in `data/hostlist.sqlite3` on this computer.
+
+## Load the temporary Firefox extension
+
+The extension connects the public demo to the local app. Firefox removes temporary extensions when it closes, so load it again after restarting the browser.
+
+1. In Firefox's address bar, open `about:debugging#/runtime/this-firefox`.
+2. Select **This Firefox** if it is not already selected.
+3. Click **Load Temporary Add-on…**.
+4. Choose `extension/manifest.json` from the cloned `hostlist-local` folder.
+5. Keep the local app running, then open the public directory at <https://www.stefanochiabrando.com/projects/hostlist-server/>.
+
+To capture the host list, let the directory load and use its pagination. Each page request is sent to the local app and saved in SQLite. Return to the local dashboard to see the captured profiles.
+
+To capture detailed profiles, use **Salva dettagli di questa pagina** in the local dashboard. The extension opens each host's detail page in the demo and saves its JSON response. You can also open a host profile manually; its details are captured when the profile page loads. The detail collection runs against hosts on the current dashboard page.
+
+The extension captures API responses made by the demo page. Opening a JSON endpoint directly in a browser tab does not trigger capture; use the directory and profile pages instead. If you change extension files, reload the add-on from `about:debugging` and then refresh the demo page so Firefox injects the updated scripts.
+
+## Run analyses
+
+Once hosts are captured, use **Analisi deterministica di questa pagina** to score the visible profiles locally. For AI analysis, copy `.env.example` to `.env`, add your model provider API key as `OPENAI_API_KEY`, and restart the app. AI analysis runs only after you choose an AI analysis action; the key is read by the local server and is never sent to the browser.
 
 ## What the analyses evaluate
 
