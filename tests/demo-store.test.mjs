@@ -14,7 +14,7 @@ after(() => {
 });
 
 test("the demo store accepts only its compact profile shape and saves details", () => {
-  const sourceUrl = "https://demo.hostlist.example/demo-api/hosts?pageStart=1&pageCount=20";
+  const sourceUrl = "https://www.stefanochiabrando.com/projects/hostlist-server/demo-api/hosts?pageStart=1&pageCount=20";
   const saved = store.saveCapture({
     sourceUrl,
     payload: {
@@ -38,7 +38,7 @@ test("the demo store accepts only its compact profile shape and saves details", 
   assert.equal("privateExtra" in host, false);
 
   const detail = store.saveHostDetail({
-    sourceUrl: "https://demo.hostlist.example/demo-api/hosts/demo-101",
+    sourceUrl: "https://www.stefanochiabrando.com/projects/hostlist-server/demo-api/hosts/demo-101",
     payload: { id: "demo-101", motivation: "Build useful digital tools", specific_skills: "TypeScript" },
   });
   assert.equal(detail.hostId, "demo-101");

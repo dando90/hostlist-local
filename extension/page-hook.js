@@ -4,10 +4,11 @@
 
   const kindFor = (url, payload) => {
     const parsed = new URL(url, location.href);
-    if (!parsed.pathname.startsWith("/demo-api/hosts")) return null;
-    const detail = parsed.pathname.match(/^\/demo-api\/hosts\/(\d+)\/?$/);
+    const demoApiPath = "/projects/hostlist-server/demo-api/hosts";
+    if (!parsed.pathname.startsWith(demoApiPath)) return null;
+    const detail = parsed.pathname.match(/^\/projects\/hostlist-server\/demo-api\/hosts\/(\d+)\/?$/);
     if (detail && payload && String(payload.id ?? payload.hostId ?? "") === detail[1]) return { kind: "host-detail", hostId: detail[1] };
-    if (/^\/demo-api\/hosts\/?$/.test(parsed.pathname) && payload && Array.isArray(payload.records)) return { kind: "list" };
+    if (/^\/projects\/hostlist-server\/demo-api\/hosts\/?$/.test(parsed.pathname) && payload && Array.isArray(payload.records)) return { kind: "list" };
     return null;
   };
 

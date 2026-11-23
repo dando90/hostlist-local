@@ -1,4 +1,4 @@
-const demoOrigin = "https://demo.hostlist.example";
+const demoOrigin = "https://www.stefanochiabrando.com/projects/hostlist-server";
 
 async function openDemoProfile(hostId) {
   if (!/^[a-zA-Z0-9_-]+$/.test(String(hostId || ""))) {

@@ -281,7 +281,7 @@ export function saveCapture(body: any) {
   if (!payload || typeof payload !== "object" || typeof sourceUrl !== "string") throw new Error("Payload o URL sorgente mancante");
   const source = new URL(sourceUrl);
   const configuredOrigin = new URL(config.demoOrigin);
-  if (source.origin !== configuredOrigin.origin || !/^\/demo-api\/hosts\/?$/.test(source.pathname)) throw new Error("Sorgente demo non riconosciuta");
+  if (source.origin !== configuredOrigin.origin || !/^\/(?:projects\/hostlist-server\/)?demo-api\/hosts\/?$/.test(source.pathname)) throw new Error("Sorgente demo non riconosciuta");
   const { records, totalRows } = recordsFrom(payload);
   const pageStart = Number.parseInt(source.searchParams.get("pageStart") ?? "", 10) || null;
   const pageCount = Number.parseInt(source.searchParams.get("pageCount") ?? "", 10) || null;
@@ -311,7 +311,7 @@ export function saveHostDetail(body: any) {
   if (!payload || typeof payload !== "object" || typeof sourceUrl !== "string") throw new Error("Payload o URL del dettaglio mancante");
   const source = new URL(sourceUrl);
   const configuredOrigin = new URL(config.demoOrigin);
-  const match = source.pathname.match(/^\/demo-api\/hosts\/([a-zA-Z0-9_-]+)\/?$/);
+  const match = source.pathname.match(/^\/(?:projects\/hostlist-server\/)?demo-api\/hosts\/([a-zA-Z0-9_-]+)\/?$/);
   if (source.origin !== configuredOrigin.origin || !match) throw new Error("Sorgente demo non riconosciuta");
   const hostId = match[1];
   if (String(payload.id ?? payload.hostId ?? "") !== hostId) throw new Error("ID host non corrispondente");

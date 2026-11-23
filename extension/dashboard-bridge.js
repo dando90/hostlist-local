@@ -1,18 +1,19 @@
 (() => {
   if (location.hostname !== "127.0.0.1" || location.port !== "18765") return;
-  document.documentElement.dataset.hostlistBridge = "ready";
 
-  const markConnected = () => {
-    const indicator = document.getElementById("bridge-state");
-    if (!indicator) return;
-    indicator.textContent = "Estensione collegata";
-    indicator.classList.add("connected");
-  };
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", markConnected, { once: true });
-  } else {
-    markConnected();
-  }
+  // React owns the page DOM; announce availability through a handshake instead
+  // of changing HTML attributes or text before hydration has completed.
+  window.addEventListener("message", (event) => {
+    if (
+      event.source !== window ||
+      event.origin !== location.origin ||
+      event.data?.type !== "HOSTLIST_BRIDGE_PING"
+    ) return;
+    window.postMessage(
+      { type: "HOSTLIST_BRIDGE_STATUS", connected: true },
+      location.origin,
+    );
+  });
 
   const status = (text, isError = false) => {
     const element = document.getElementById("open-status");
@@ -21,7 +22,7 @@
     element.classList.toggle("error", isError);
   };
 
-  const openProfile = (hostId) => browser.runtime.sendMessage({ type: "OPEN_HOST_PROFILE", hostId });
+  const openProfile = (hostId) => browser.runtime.sendMessage({ type: "HOSTLIST_OPEN_PROFILE", hostId });
 
   browser.runtime.onMessage.addListener((message) => {
     if (message?.type !== "HOSTLIST_DATA_CHANGED") return undefined;

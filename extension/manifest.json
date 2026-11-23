@@ -3,10 +3,10 @@
   "name": "HostList Local Bridge",
   "version": "0.1.0",
   "description": "Collega la dashboard locale all'applicazione HostList.",
-  "permissions": ["https://demo.hostlist.example/*", "http://127.0.0.1/*", "tabs"],
+  "permissions": ["https://www.stefanochiabrando.com/projects/hostlist-server/*", "http://127.0.0.1/*", "tabs"],
   "content_scripts": [
     {
-      "matches": ["https://demo.hostlist.example/*"],
+      "matches": ["https://www.stefanochiabrando.com/projects/hostlist-server/*"],
       "js": ["content.js"],
       "run_at": "document_start"
     },

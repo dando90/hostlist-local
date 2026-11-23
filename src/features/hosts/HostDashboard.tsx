@@ -96,15 +96,21 @@ export default function HostDashboard() {
   });
 
   useEffect(() => {
-    setBridgeConnected(
-      document.documentElement.dataset.hostlistBridge === "ready",
-    );
     const onMessage = (
       event: MessageEvent<
-        ExtensionEvent & { requestId?: string; ok?: boolean; message?: string }
+        ExtensionEvent & {
+          requestId?: string;
+          ok?: boolean;
+          message?: string;
+          connected?: boolean;
+        }
       >,
     ) => {
       if (event.source !== window || event.origin !== location.origin) return;
+      if (event.data?.type === "HOSTLIST_BRIDGE_STATUS") {
+        setBridgeConnected(Boolean(event.data.connected));
+        return;
+      }
       if (
         event.data?.type === "HOSTLIST_OPEN_PROFILE_RESULT" &&
         event.data.requestId
@@ -161,6 +167,7 @@ export default function HostDashboard() {
       }
     };
     window.addEventListener("message", onMessage);
+    window.postMessage({ type: "HOSTLIST_BRIDGE_PING" }, location.origin);
     return () => window.removeEventListener("message", onMessage);
   }, [expanded]);
 
